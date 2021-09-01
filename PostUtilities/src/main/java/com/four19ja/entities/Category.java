@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-@Entity // This tells Hibernate to make a table out of this class
+@Entity
 @Table(name = "category")
 public class Category {
     @Id
