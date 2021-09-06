@@ -54,7 +54,7 @@ public class SecurityController {
                 String refresh_token = Jwts.builder()
                         .setSubject(user.getUsername())
                         .setIssuedAt(new java.sql.Date(now))
-                        .setExpiration(new java.sql.Date(now + jwtConfig.getExpiration() * 1000))  // in milliseconds #TODO: make expiration for refresh different
+                        .setExpiration(new java.sql.Date(now + jwtConfig.getRefreshExpiration() * 1000))  // in milliseconds #TODO: make expiration for refresh different
                         .signWith(key, SignatureAlgorithm.HS512)
                         .compact();
                 response.setHeader("access_token", access_token);

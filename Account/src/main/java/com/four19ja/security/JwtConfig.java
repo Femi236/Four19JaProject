@@ -15,8 +15,11 @@ public class JwtConfig {
     @Value("${security.jwt.prefix:Bearer }")
     private String prefix;
 
-    @Value("${security.jwt.expiration:#{24*60*60}}")
+    @Value("${security.jwt.expiration:#{60*60}}")
     private int expiration;
+
+    @Value("${security.jwt.expiration:#{7*24*60*60}}")
+    private int refreshExpiration;
 
     @Value("${security.jwt.secret:JwtSecretKey}")
     private String secret;
@@ -59,5 +62,13 @@ public class JwtConfig {
 
     public void setSecret(String secret) {
         this.secret = secret;
+    }
+
+    public int getRefreshExpiration() {
+        return refreshExpiration;
+    }
+
+    public void setRefreshExpiration(int refreshExpiration) {
+        this.refreshExpiration = refreshExpiration;
     }
 }
