@@ -1,20 +1,55 @@
 package com.four19ja.services;
 
 import com.four19ja.entities.User;
+import com.four19ja.entities.UserRole;
+import com.four19ja.repositories.RoleRepository;
 import com.four19ja.repositories.UserRepository;
+import com.four19ja.repositories.UserRoleRepository;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
+    private UserRoleRepository userRoleRepository;
+    private RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserRoleRepository userRoleRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username);
+        if(user == null) {
+            throw new UsernameNotFoundException("User not found in the database");
+        }
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        userRoleRepository.findAllByUserID(user.getId()).forEach(userRole -> {
+            authorities.add(new SimpleGrantedAuthority(roleRepository.findById(userRole.getRoleID()).orElse(null).getName()));
+        });
+//        user.getRoles().forEach(role -> {
+//            authorities.add(new SimpleGrantedAuthority(role.getName()));
+//        });
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
     }
 
     public String addNewUser(String username, String firstName, String lastName, String email, String password) {
         User user = new User(username, firstName, lastName, email, password);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return "Saved";
     }
@@ -44,5 +79,19 @@ public class UserService {
         }
         userRepository.deleteById(id);
         return "Deleted";
+    }
+
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public Collection<UserRole> getUserRoles(Integer id) {
+//        List userRoles = new ArrayList<>();
+//        userRoleRepository.findAllByUserID(id).forEach(userRole -> {
+//            userRoles.add(roleRepository.findById(userRole.getRoleID()).orElse(null).getName());
+//        });
+//        Collection<Integer> r = userRoleRepository.findAllByUserID(id);
+
+        return userRoleRepository.findAllByUserID(id);
     }
 }
