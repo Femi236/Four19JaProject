@@ -27,6 +27,7 @@ jobs:
       run: gradle build
       
   checkstyle:
+    needs: build
     runs-on: ${{matrix.os}}
     strategy:
       matrix:
@@ -46,6 +47,7 @@ jobs:
       run: gradle checkstyleMain checkStyleTest
       
   test:
+    needs: checkstyle
     runs-on: ${{matrix.os}}
     strategy:
       matrix:
