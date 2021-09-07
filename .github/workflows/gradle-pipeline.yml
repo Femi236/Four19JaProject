@@ -7,11 +7,11 @@ on: [push, pull_request]
 
 jobs:
   build:
-
-    runs-on: ${{matrix.os}}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ubuntu-latest
+#    runs-on: ${{matrix.os}}
+#    strategy:
+#      matrix:
+#        os: [ubuntu-latest, windows-latest, macOS-latest]
     permissions:
       contents: read
       packages: write
@@ -31,10 +31,11 @@ jobs:
       
   checkstyle:
     needs: build
-    runs-on: ${{matrix.os}}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ubuntu-latest
+    #    runs-on: ${{matrix.os}}
+    #    strategy:
+    #      matrix:
+    #        os: [ubuntu-latest, windows-latest, macOS-latest]
     permissions:
       contents: read
       packages: write
@@ -54,10 +55,11 @@ jobs:
       
   test:
     needs: checkstyle
-    runs-on: ${{matrix.os}}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ubuntu-latest
+    #    runs-on: ${{matrix.os}}
+    #    strategy:
+    #      matrix:
+    #        os: [ubuntu-latest, windows-latest, macOS-latest]
     permissions:
       contents: read
       packages: write
