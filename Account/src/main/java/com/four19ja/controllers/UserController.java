@@ -19,6 +19,13 @@ public class UserController {
         return userService.addNewUser(username, firstName, lastName, email, password);
     }
 
+    @PostMapping(path = "/register")
+    public @ResponseBody String register(@RequestParam String username, @RequestParam String firstName,
+                                           @RequestParam String lastName, @RequestParam String email,
+                                           @RequestParam String password) {
+        return userService.register(username, firstName, lastName, email, password);
+    }
+
     @GetMapping(path = "/all")
     public @ResponseBody Iterable<User> getAllUser() {
         return userService.getAllUser();

@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors();
         // make sure we use stateless session; session won't be used to store user's state.
         http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.authorizeRequests().antMatchers("/login/**", "/security/token/refresh/**").permitAll();
+        http.authorizeRequests().antMatchers("/login/**", "/security/token/refresh/**", "/user/register/**").permitAll();
         // handle an authorized attempts
         http.exceptionHandling().authenticationEntryPoint(
                 (req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED)).and().addFilterAfter(new CustomAuthorizationFilter(jwtConfigure), UsernamePasswordAuthenticationFilter.class);

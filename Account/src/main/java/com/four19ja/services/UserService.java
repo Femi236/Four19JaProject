@@ -1,5 +1,6 @@
 package com.four19ja.services;
 
+import com.four19ja.entities.Role;
 import com.four19ja.entities.User;
 import com.four19ja.entities.UserRole;
 import com.four19ja.repositories.RoleRepository;
@@ -47,6 +48,16 @@ public class UserService implements UserDetailsService {
         User user = new User(username, firstName, lastName, email, password);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+        return "Saved";
+    }
+
+    public String register(String username, String firstName, String lastName, String email, String password) {
+        User user = new User(username, firstName, lastName, email, password);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        Role role = roleRepository.findByName("subscriber");
+        UserRole userRole = new UserRole(user.getId(), role.getId());
+        userRoleRepository.save(userRole);
         return "Saved";
     }
 
