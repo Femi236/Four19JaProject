@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -41,9 +40,6 @@ public class UserService implements UserDetailsService {
         userRoleRepository.findAllByUserID(user.getId()).forEach(userRole -> {
             authorities.add(new SimpleGrantedAuthority(roleRepository.findById(userRole.getRoleID()).orElse(null).getName()));
         });
-//        user.getRoles().forEach(role -> {
-//            authorities.add(new SimpleGrantedAuthority(role.getName()));
-//        });
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
     }
 
@@ -86,12 +82,6 @@ public class UserService implements UserDetailsService {
     }
 
     public Collection<UserRole> getUserRoles(Integer id) {
-//        List userRoles = new ArrayList<>();
-//        userRoleRepository.findAllByUserID(id).forEach(userRole -> {
-//            userRoles.add(roleRepository.findById(userRole.getRoleID()).orElse(null).getName());
-//        });
-//        Collection<Integer> r = userRoleRepository.findAllByUserID(id);
-
         return userRoleRepository.findAllByUserID(id);
     }
 }

@@ -13,7 +13,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.cors.CorsUtils;
 
 import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
@@ -45,13 +44,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        if (CorsUtils.isPreFlightRequest(request)) {
-            response.setStatus(HttpServletResponse.SC_OK);
-//            return new auth() ; //whatever your token implementation class is - return an instance of it
-            System.out.println("PREFLIGHT");
-
-        }
-        System.out.println("HITTTTT");
         try {
 
             // 1. Get credentials from request
@@ -94,20 +86,15 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .setExpiration(new java.sql.Date(now + jwtConfig.getRefreshExpiration() * 1000))  // in milliseconds
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
-//        response.setHeader("access_token", access_token);
-//        response.setHeader("refresh_token", refresh_token);
         Map<String, String> tokens = new HashMap<>();
         tokens.put("access_token", access_token);
         tokens.put("refresh_token", refresh_token);
         response.setContentType(APPLICATION_JSON_VALUE);
         response.setStatus(200);
-//        System.out.println("HERE");
-//        System.out.println(response.getHeaderNames());
         response.setHeader("origin", "http://localhost:8080, http://localhost:3000");
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "DELETE, POST, GET, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-        System.out.println(response.getHeaderNames());
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
     }
 
