@@ -13,13 +13,32 @@ public class IngredientService {
     }
 
     public String addNewIngredient(String name) {
-        Ingredient i = new Ingredient();
-        i.setName(name);
-        ingredientRepository.save(i);
+        Ingredient ingredient = new Ingredient();
+        ingredient.setName(name);
+        ingredientRepository.save(ingredient);
         return "Saved";
     }
 
     public Iterable<Ingredient> getAllIngredients() {
         return ingredientRepository.findAll();
+    }
+
+    public String updateIngredient(Integer id, String name) {
+        Ingredient ingredient = ingredientRepository.findById(id).orElse(null);
+        if(ingredient == null) {
+            return "Not Saved";
+        }
+        ingredient.setName(name);
+        ingredientRepository.save(ingredient);
+        return "Saved";
+    }
+
+    public String deleteIngredient(Integer id) {
+        Ingredient ingredient = ingredientRepository.findById(id).orElse(null);
+        if(ingredient == null) {
+            return "Does not exist";
+        }
+        ingredientRepository.deleteById(id);
+        return "Deleted";
     }
 }

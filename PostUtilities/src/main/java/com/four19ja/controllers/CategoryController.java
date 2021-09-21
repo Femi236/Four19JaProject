@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping(path = "/postUtilities")
+@RequestMapping(path = "/postUtilities/category")
 public class CategoryController {
     private final CategoryService categoryService;
 
@@ -14,14 +14,24 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @PostMapping(path = "/addCategory")
+    @PostMapping(path = "/add")
     String addNewCategory(@RequestParam String name) {
         return categoryService.addNewCategory(name);
     }
 
-    @GetMapping(path = "/allCategories")
+    @GetMapping(path = "/all")
     public @ResponseBody
     Iterable<Category> getAllCategories() {
         return categoryService.getAllCategories();
+    }
+
+    @PostMapping(path = "/update")
+    public @ResponseBody String updateCategory(@RequestParam Integer id, @RequestParam String name) {
+        return categoryService.updateCategory(id, name);
+    }
+
+    @PostMapping(path = "/delete")
+    public @ResponseBody String deleteCategory(@RequestParam Integer id) {
+        return categoryService.deleteCategory(id);
     }
 }

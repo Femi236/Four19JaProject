@@ -13,13 +13,32 @@ public class EquipmentService {
     }
 
     public String addNewEquipment(String name) {
-        Equipment e = new Equipment();
-        e.setName(name);
-        equipmentRepository.save(e);
+        Equipment equipment = new Equipment();
+        equipment.setName(name);
+        equipmentRepository.save(equipment);
         return "Saved";
     }
 
     public Iterable<Equipment> getAllEquipment() {
         return equipmentRepository.findAll();
+    }
+
+    public String updateEquipment(Integer id, String name) {
+        Equipment equipment = equipmentRepository.findById(id).orElse(null);
+        if(equipment == null) {
+            return "Not Saved";
+        }
+        equipment.setName(name);
+        equipmentRepository.save(equipment);
+        return "Saved";
+    }
+
+    public String deleteEquipment(Integer id) {
+        Equipment equipment = equipmentRepository.findById(id).orElse(null);
+        if(equipment == null) {
+            return "Does not exist";
+        }
+        equipmentRepository.deleteById(id);
+        return "Deleted";
     }
 }

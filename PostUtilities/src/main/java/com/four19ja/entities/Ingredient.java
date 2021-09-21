@@ -1,5 +1,7 @@
 package com.four19ja.entities;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +13,8 @@ import javax.persistence.Table;
 @Table(name = "ingredient")
 public class Ingredient {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native", strategy = "native")
     @Column(name = "ingredient_id")
     private Integer ingredientID;
 
