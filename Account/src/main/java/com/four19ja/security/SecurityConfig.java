@@ -2,9 +2,6 @@ package com.four19ja.security;
 
 import com.four19ja.filter.CustomAuthenticationFilter;
 import com.four19ja.filter.CustomAuthorizationFilter;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Encoders;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletResponse;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -33,10 +29,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtConfigure = jwtConfigure;
-
-        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-        String base64Key = Encoders.BASE64.encode(key.getEncoded());
-        jwtConfigure.setSecret(base64Key);
     }
 
     @Override
