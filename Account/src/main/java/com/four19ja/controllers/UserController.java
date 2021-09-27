@@ -3,6 +3,7 @@ package com.four19ja.controllers;
 import com.four19ja.entities.User;
 import com.four19ja.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,5 +40,10 @@ public class UserController {
     @PostMapping(path = "/delete")
     public @ResponseBody String deleteUser(@RequestParam Integer id) {
         return userService.deleteUser(id);
+    }
+
+    @GetMapping(path = "/me")
+    public @ResponseBody UserService.PublicUser getCurrentUser(Authentication authentication) {
+       return userService.getCurrentUser(authentication);
     }
 }

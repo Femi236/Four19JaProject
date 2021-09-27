@@ -6,6 +6,7 @@ import com.four19ja.entities.UserRole;
 import com.four19ja.repositories.RoleRepository;
 import com.four19ja.repositories.UserRepository;
 import com.four19ja.repositories.UserRoleRepository;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -94,5 +95,63 @@ public class UserService implements UserDetailsService {
 
     public Collection<UserRole> getUserRoles(Integer id) {
         return userRoleRepository.findAllByUserID(id);
+    }
+
+    public PublicUser getCurrentUser(Authentication authentication) {
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username);
+        PublicUser publicUser = new PublicUser(user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail());
+        return publicUser;
+
+    }
+
+    // A (temporary) class just to represent the user details to send to the front end
+    public static class PublicUser {
+        private String username;
+        private String firstName;
+        private String lastName;
+        private String email;
+
+        public PublicUser() {
+        }
+
+        public PublicUser(String username, String firstName, String lastName, String email) {
+            this.username = username;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
     }
 }
