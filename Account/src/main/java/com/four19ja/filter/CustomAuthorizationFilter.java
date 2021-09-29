@@ -2,6 +2,7 @@ package com.four19ja.filter;
 
 import com.four19ja.security.JwtConfig;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -48,7 +49,13 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                         SecurityContextHolder.getContext().setAuthentication(auth);
                         filterChain.doFilter(request, response);
                     }
-                }catch (Exception exception) {
+                }catch (ExpiredJwtException exception) {
+                    response.setHeader("Access-Control-Expose-Headers", "error");
+                    response.setHeader("error", exception.getMessage());
+                    response.setStatus(FORBIDDEN.value());
+                    response.sendError(FORBIDDEN.value());
+                }
+                catch (Exception exception) {
                     response.setHeader("error", exception.getMessage());
                     response.setStatus(FORBIDDEN.value());
                     response.sendError(FORBIDDEN.value());

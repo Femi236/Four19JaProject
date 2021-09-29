@@ -33,6 +33,16 @@ public class RoleService {
         return "Saved";
     }
 
+    public String getRoleName(Integer id) {
+        Role role = roleRepository.findById(id).orElse(null);
+//        try{
+            return role.getName();
+//        } catch(Exception e) {
+//            throw new ExistExc();
+//        }
+
+    }
+
     public String deleteRole(Integer id) {
         Role role = roleRepository.findById(id).orElse(null);
         if(role == null) {

@@ -3,12 +3,14 @@ package com.four19ja.controllers;
 import com.four19ja.entities.User;
 import com.four19ja.entities.UserRole;
 import com.four19ja.security.JwtConfig;
+import com.four19ja.services.RoleService;
 import com.four19ja.services.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,10 +27,12 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 @RequestMapping(path = "/security")
 public class SecurityController {
     private UserService userService;
+    private RoleService roleService;
     private JwtConfig jwtConfig;
 
-    public SecurityController(UserService userService, JwtConfig jwtConfig) {
+    public SecurityController(UserService userService, RoleService roleService, JwtConfig jwtConfig) {
         this.userService = userService;
+        this.roleService = roleService;
         this.jwtConfig = jwtConfig;
     }
 
@@ -46,7 +50,7 @@ public class SecurityController {
                 String access_token = Jwts.builder()
                         .setSubject(user.getUsername())
                         .claim("authorities", userService.getUserRoles(user.getId()).stream()
-                                .map(UserRole::getUserID).collect(Collectors.toList()))
+                                .map(UserRole::getRoleID).map(roleId -> roleService.getRoleName(roleId)).collect(Collectors.toList()))
                         .setIssuedAt(new java.sql.Date(now))
                         .setExpiration(new java.sql.Date(now + jwtConfig.getExpiration() * 1000))  // in milliseconds
                         .signWith(key, SignatureAlgorithm.HS512)
@@ -57,6 +61,7 @@ public class SecurityController {
                         .setExpiration(new java.sql.Date(now + jwtConfig.getRefreshExpiration() * 1000))  // in milliseconds
                         .signWith(key, SignatureAlgorithm.HS512)
                         .compact();
+                response.setHeader("Access-Control-Expose-Headers", "access_token, refresh_token");
                 response.setHeader("access_token", access_token);
                 response.setHeader("refresh_token", refresh_token);
             }catch (Exception exception) {
