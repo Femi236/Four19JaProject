@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @IdClass(LikeID.class)
-@Table(name = "favourite")
+@Table(name = "liked_post")
 public class Like {
 
     @Id
