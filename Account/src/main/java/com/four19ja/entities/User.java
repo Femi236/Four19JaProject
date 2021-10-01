@@ -3,18 +3,25 @@ package com.four19ja.entities;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Objects;
 
-@Entity // This tells Hibernate to make a table out of this class
+@Entity
 @Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     @Column(name = "user_id")
-    private Integer userID;
+    private Integer id;
 
     @Column(name = "username")
     private String username;
+
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
 
     @Column(name = "email")
     private String email;
@@ -26,18 +33,20 @@ public class User {
 
     }
 
-    public User(String username, String email, String password) {
+    public User(String username, String firstName, String lastName, String email, String password) {
         this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.password = password;
     }
 
-    public Integer getUserID() {
-        return userID;
+    public Integer getId() {
+        return id;
     }
 
-    public void setUserID(Integer userID) {
-        this.userID = userID;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -46,6 +55,22 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -66,16 +91,9 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return userID.equals(user.userID)
-                && username.equals(user.username)
-                && email.equals(user.email)
-                && password.equals(user.password);
+        return Objects.equals(id, user.id);
     }
 }
