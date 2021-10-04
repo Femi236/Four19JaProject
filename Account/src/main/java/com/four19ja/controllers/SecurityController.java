@@ -10,7 +10,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +35,13 @@ public class SecurityController {
         this.jwtConfig = jwtConfig;
     }
 
+    /**
+     * Create new access and refresh tokens if the refresh token received is valid.
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(jwtConfig.getHeader());

@@ -14,16 +14,25 @@ public class UserRoleService {
         this.userRoleRepository = userRoleRepository;
     }
 
+    /**
+     * Create a new userRole.
+     *
+     * @param user_id the id of the user
+     * @param role_id the id of the role
+     * @return the status of the request
+     */
     public String addNewUserRole(Integer user_id, Integer role_id) {
         UserRole userRole = new UserRole(user_id, role_id);
         userRoleRepository.save(userRole);
         return "Saved";
     }
 
-    public Iterable<UserRole> getAllUserRoles() {
-        return userRoleRepository.findAll();
-    }
-
+    /**
+     * Update a userRole.
+     *
+     * @param id the id of the userRole
+     * @return the status of the request
+     */
     public String deleteUserRole(UserRoleID id) {
         UserRole userRole = userRoleRepository.findById(id).orElse(null);
         if(userRole == null) {

@@ -1,6 +1,5 @@
 package com.four19ja.entities;
 
-import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 //@Embeddable

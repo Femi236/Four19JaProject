@@ -1,6 +1,7 @@
 package com.four19ja.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.four19ja.dto.UserCredentials;
 import com.four19ja.security.JwtConfig;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -42,6 +43,14 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 new AntPathRequestMatcher(jwtConfig.getUri(), "POST"));
     }
 
+    /**
+     * Attempt authenticating a user from their username and password.
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws AuthenticationException
+     */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
@@ -68,6 +77,16 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         }
     }
 
+    /**
+     * Create access and refresh tokens for the user.
+     *
+     * @param request
+     * @param response
+     * @param chain
+     * @param authentication
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         Long now = System.currentTimeMillis();
@@ -98,25 +117,4 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
     }
 
-    // A (temporary) class just to represent the user credentials
-    private static class UserCredentials {
-        private String username;
-        private String password;
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-    }
 }

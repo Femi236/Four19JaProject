@@ -1,5 +1,6 @@
 package com.four19ja.services;
 
+import com.four19ja.dto.PublicUser;
 import com.four19ja.entities.Role;
 import com.four19ja.entities.User;
 import com.four19ja.entities.UserRole;
@@ -32,6 +33,13 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Load a user by its username.
+     *
+     * @param username the username of the user
+     * @return a userDetails user
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
@@ -45,6 +53,16 @@ public class UserService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
     }
 
+    /**
+     * Create a new user.
+     *
+     * @param username the username of the user
+     * @param firstName the first name of the user
+     * @param lastName the last name of the user
+     * @param email the email of the user
+     * @param password the password of the user
+     * @return the status of the request
+     */
     public String addNewUser(String username, String firstName, String lastName, String email, String password) {
         User user = new User(username, firstName, lastName, email, password);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -52,6 +70,16 @@ public class UserService implements UserDetailsService {
         return "Saved";
     }
 
+    /**
+     * Register a new user.
+     *
+     * @param username the username of the user
+     * @param firstName the first name of the user
+     * @param lastName the last name of the user
+     * @param email the email of the user
+     * @param password the password of the user
+     * @return the status of the request
+     */
     public String register(String username, String firstName, String lastName, String email, String password) {
         User user = new User(username, firstName, lastName, email, password);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -62,10 +90,17 @@ public class UserService implements UserDetailsService {
         return "Saved";
     }
 
-    public Iterable<User> getAllUser() {
-        return userRepository.findAll();
-    }
-
+    /**
+     * Update the details of a user.
+     *
+     * @param id the id of the user to update
+     * @param username the new username of the user
+     * @param firstName the new first name of the user
+     * @param lastName the new last name of the user
+     * @param email the new email of the user
+     * @param password the new password of the user
+     * @return the status of the request
+     */
     public String updateUser(Integer id, String username, String firstName, String lastName, String email, String password) {
         User user = userRepository.findById(id).orElse(null);
         if(user == null) {
@@ -80,6 +115,12 @@ public class UserService implements UserDetailsService {
         return "Saved";
     }
 
+    /**
+     * Delete a user.
+     *
+     * @param id the id of the user to delete
+     * @return the status of the request
+     */
     public String deleteUser(Integer id) {
         User user = userRepository.findById(id).orElse(null);
         if(user == null) {
@@ -89,14 +130,31 @@ public class UserService implements UserDetailsService {
         return "Deleted";
     }
 
+    /**
+     * Get a user by their username.
+     *
+     * @param username the username of the user to retrieve
+     * @return the user
+     */
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
+    /**
+     * Get the UserRoles associated with a user.
+     *
+     * @param id the id of the user
+     * @return the user roles associated with the user
+     */
     public Collection<UserRole> getUserRoles(Integer id) {
         return userRoleRepository.findAllByUserID(id);
     }
 
+    /**
+     * Get the details of the currently signed in user.
+     * @param authentication
+     * @return the details of the user
+     */
     public PublicUser getCurrentUser(Authentication authentication) {
         String username = authentication.getName();
         User user = userRepository.findByUsername(username);
@@ -105,53 +163,4 @@ public class UserService implements UserDetailsService {
 
     }
 
-    // A (temporary) class just to represent the user details to send to the front end
-    public static class PublicUser {
-        private String username;
-        private String firstName;
-        private String lastName;
-        private String email;
-
-        public PublicUser() {
-        }
-
-        public PublicUser(String username, String firstName, String lastName, String email) {
-            this.username = username;
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.email = email;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-    }
 }

@@ -1,6 +1,5 @@
 package com.four19ja.controllers;
 
-import com.four19ja.entities.UserRole;
 import com.four19ja.entities.UserRoleID;
 import com.four19ja.services.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +15,6 @@ public class UserRoleController {
     @PostMapping(path = "/add")
     public @ResponseBody String addNewRole(@RequestParam Integer user_id, @RequestParam Integer role_id) {
         return userRoleService.addNewUserRole(user_id, role_id);
-    }
-
-    @GetMapping(path = "/all")
-    public @ResponseBody Iterable<UserRole> getAllRole() {
-        return userRoleService.getAllUserRoles();
     }
 
     @PostMapping(path = "/delete")

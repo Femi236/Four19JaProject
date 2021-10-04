@@ -1,6 +1,6 @@
 package com.four19ja.controllers;
 
-import com.four19ja.entities.User;
+import com.four19ja.dto.PublicUser;
 import com.four19ja.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -27,11 +27,6 @@ public class UserController {
         return userService.register(username, firstName, lastName, email, password);
     }
 
-    @GetMapping(path = "/all")
-    public @ResponseBody Iterable<User> getAllUser() {
-        return userService.getAllUser();
-    }
-
     @PostMapping(path = "/update")
     public @ResponseBody String updateUser(@RequestParam Integer id, @RequestParam String username, @RequestParam String firstName, @RequestParam String lastName, @RequestParam String email, @RequestParam String password) {
         return userService.updateUser(id, username, firstName, lastName, email, password);
@@ -43,7 +38,8 @@ public class UserController {
     }
 
     @GetMapping(path = "/me")
-    public @ResponseBody UserService.PublicUser getCurrentUser(Authentication authentication) {
+    public @ResponseBody
+    PublicUser getCurrentUser(Authentication authentication) {
        return userService.getCurrentUser(authentication);
     }
 }

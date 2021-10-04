@@ -27,6 +27,15 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         this.jwtConfig = jwtConfig;
     }
 
+    /**
+     * Authorize users based on their access rights.
+     *
+     * @param request
+     * @param response
+     * @param filterChain
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if(request.getServletPath().equals("/auth") || request.getServletPath().equals("/security/token/refresh")) {
