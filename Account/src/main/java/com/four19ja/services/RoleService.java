@@ -40,7 +40,7 @@ public class RoleService {
         }
         role.setName(name);
         roleRepository.save(role);
-        return "Saved";
+        return "Updated";
     }
 
     /**
